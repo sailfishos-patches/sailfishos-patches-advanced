@@ -1,0 +1,10 @@
+{
+    "name": "Unlimited multitask",
+    "description": "Provides unlimited multitask",
+    "patches": [
+        {
+            "dir": "/opt/lipstick-pandora/qml",
+            "patch": "unlimited.patch"
+        }
+    ]
+}

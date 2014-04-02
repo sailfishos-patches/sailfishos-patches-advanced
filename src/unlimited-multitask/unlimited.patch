@@ -1,0 +1,121 @@
+Les sous-répertoires original/compositor et patched/compositor sont identiques
+diff -u original/main.qml patched/main.qml
+--- original/main.qml	2014-04-02 13:14:43.684356100 +0200
++++ patched/main.qml	2014-04-01 21:38:21.000000000 +0200
+@@ -540,15 +540,15 @@
+             id: switcherAnchor
+             width: dashboard.width
+             height: dashboard.height
+-            visible: dashboard.contentY > 0 && dashboard.contentY < lockAndStatusDelegate.height + switcherAnchor.height
+-
++            // visible: dashboard.contentY > 0 && dashboard.contentY < lockAndStatusDelegate.height + switcherAnchor.height
++            
+             DeviceLock {
+                 id: deviceLockUI
+                 width: dashboard.width
+                 height: dashboard.height
+                 opacity: deviceLock.state == 1 ? 1 : 0
+                 enabled: deviceLock.state == 1
+-
++                        
+                 Behavior on opacity { FadeAnimation {} }
+ 
+                 Binding {
+@@ -560,11 +560,36 @@
+ 
+             Switcher {
+                 id: switcher
++                property int pageCount: 1// Math.ceil(height / dashboard.height)
++                property int _addedPages: 0
+                 width: dashboard.width
+                 opacity: deviceLock.state == 1 ? 0 : 1
+                 enabled: deviceLock.state != 1
+-
++                
+                 Behavior on opacity { FadeAnimation {} }
++                
++                onHeightChanged: manageSwitcherPages()
++                
++                function manageSwitcherPages() {
++                    if (dashboard.height > 0) {
++                        // Create dummy pages to allow paging
++                        switcher.pageCount = Math.ceil(switcher.height / dashboard.height)
++                        while (switcher._addedPages < switcher.pageCount - 1) {
++                            var dummy = dummyDelegate.createObject(dashboard.contentItem)
++                            dashboard.model.insert(2, { comp: dummy })
++                            switcher._addedPages ++
++                        }
++                        while (switcher._addedPages > switcher.pageCount - 1) {
++                            dashboard.model.remove(2)
++                            switcher._addedPages --
++                        }
++                        
++                        for (var i = 1; i < 1 + switcher._addedPages; i++) {
++                            dashboard.model.get(i).comp.height = switcher.singlePageHeight
++                        }
++                        dashboard.model.get(1 + switcher._addedPages).comp.height = dashboard.height
++                    }
++                }
+             }
+         }
+ 
+@@ -587,7 +612,7 @@
+ 
+             MouseArea {
+                 width: parent.width
+-                height: (dashboard.model.count - 2) * dashboard.height + launcher.cellHeight
++                height: (dashboard.model.count - 1 - switcher.pageCount) * dashboard.height + launcher.cellHeight
+ 
+                 Launcher {
+                     id: launcher
+@@ -595,14 +620,14 @@
+                     onHeightChanged: manageDummyPages()
+ 
+                     function manageDummyPages() {
+-                        if (dashboard.model.count > 2 && dashboard.height > 0 && height > cellHeight) {
++                        if (dashboard.model.count > 1 + switcher.pageCount && dashboard.height > 0 && height > cellHeight) {
+                             // Create dummy pages to allow paging
+                             var pageCount = Math.ceil((height - cellHeight)/dashboard.height)
+-                            while (dashboard.model.count-2 < pageCount) {
++                            while (dashboard.model.count - 1 - switcher.pageCount < pageCount) {
+                                 var dummy = dummyDelegate.createObject(dashboard.contentItem)
+                                 dashboard.model.append({ comp: dummy })
+                             }
+-                            while (dashboard.model.count-2 > pageCount) {
++                            while (dashboard.model.count - 1 - switcher.pageCount > pageCount) {
+                                 var obj = dashboard.model.get(dashboard.model.count-1)
+                                 dashboard.model.remove(dashboard.model.count-1)
+                             }
+Les sous-répertoires original/scripts et patched/scripts sont identiques
+diff -u original/Switcher.qml patched/Switcher.qml
+--- original/Switcher.qml	2014-04-02 13:14:43.718356343 +0200
++++ patched/Switcher.qml	2014-04-01 21:39:56.000000000 +0200
+@@ -19,8 +19,9 @@
+     property int showingPid
+     property bool skipOnReleased: false
+     property bool appShowInProgress: showingPid > 0 || appShowTimer.running || pendingWindows.count > 0
++    property int singlePageHeight: switcherRoot.columns * (Theme.paddingLarge + switcherRoot.windowHeight)
+ 
+-    height: desktop.closeApplicationEnabled ? Math.max(housekeeping.height, switcherRoot.height + 2 * Theme.paddingLarge) : desktop.height
++    height: desktop.closeApplicationEnabled ? Math.max(housekeeping.height, switcherRoot.height + 2 * Theme.paddingLarge) : desktop.height * Math.max(Math.ceil(mruSwitcherModel.count / 9), 1)
+ 
+     function playEffect() {
+         ngfEvent.play()
+@@ -213,7 +214,7 @@
+                 id: switcherDelegate
+                 width: switcherRoot.windowWidth
+                 height: switcherRoot.windowHeight
+-                visible: desktop.closeApplicationEnabled || model.index < 9
++                // visible: desktop.closeApplicationEnabled
+                 onWindowMapPendingChanged: {
+                     if (windowMapPending) mruSwitcherModel.touch(index)
+                 }
+@@ -241,7 +242,7 @@
+             onCloseApplicationEnabledChanged: switcherRoot.updateColumns()
+         }
+     }
+-
++    
+     // We use a separate inner item here instead of reparenting to switcherWrapper
+     // to allow the column change animation to modify its opacity without interfering
+     // with any opacity applied to switcherWrapper.
