@@ -1,0 +1,70 @@
+diff -u original/AmbiencePage.qml patched/AmbiencePage.qml
+--- original/AmbiencePage.qml	2014-04-03 09:24:07.378635010 +0200
++++ patched/AmbiencePage.qml	2014-04-03 09:59:36.329082548 +0200
+@@ -14,6 +14,8 @@
+ import org.nemomobile.lipstick 0.1
+ import com.jolla.lipstick 0.1
+ import "compositor"
++import com.jolla.settings 1.0
++import org.nemomobile.systemsettings 1.0
+ 
+ Page {
+     id: page
+@@ -39,6 +41,9 @@
+     readonly property bool _switcherEnabled: !deviceIsLocked && (!progressAnimation.running && !contentAnimation.running)
+                 && (ambienceSwitcherOpen || (ambienceSwitcherEnabled && ambienceModel.count > 1))
+                 && (PeekFilter.activeArea == PeekFilter.Left || PeekFilter.activeArea == PeekFilter.Right) && Lipstick.compositor.homeActive
++    readonly property bool _switcherLockEnabled: (!progressAnimation.running && !contentAnimation.running)
++                && (ambienceSwitcherOpen || (ambienceSwitcherEnabled && ambienceModel.count > 1))
++                && (PeekFilter.activeArea == PeekFilter.Left || PeekFilter.activeArea == PeekFilter.Right) && Lipstick.compositor.homeActive
+ 
+     property string _currentHomeWallpaper: Ambience.homeWallpaper
+ 
+@@ -49,7 +54,9 @@
+     }
+ 
+     PeekFilter.onGestureStarted: {
+-        if (_switcherEnabled) {
++        if ((_switcherEnabled && PeekFilter.activeArea == PeekFilter.Left)
++            || (_switcherLockEnabled && PeekFilter.activeArea == PeekFilter.Right)
++            || ambienceSwitcherOpen) {
+             anchorAmbienceItem()
+             progressBinding.when = true
+         }
+@@ -134,6 +141,16 @@
+             ambienceItem.anchors.right = undefined
+             ambienceItem.anchors.left = contentItem.right
+         }
++        
++        if (!ambienceSwitcherOpen) {
++            if (PeekFilter.activeArea == PeekFilter.Right) {
++                grid.visible = false
++                widgets.visible = true
++            } else {
++                grid.visible = true
++                widgets.visible = false
++            }
++        }
+     }
+ 
+     property real _progress
+@@ -270,6 +287,17 @@
+         anchors.left: contentItem.right
+         // Scenegraph does not seem to cull yet, explicitly hide
+         visible: contentItem.x != 0 || page.ambienceSwitcherOpen
++        
++        Item {
++            id: widgets
++            visible: false
++            anchors.fill: parent
++            
++            FavoritesZone {
++                id: favorites
++                anchors.top: parent.top
++            }
++        }
+ 
+         ImageGridView {
+             id: grid
+Les sous-répertoires original/compositor et patched/compositor sont identiques
+Les sous-répertoires original/scripts et patched/scripts sont identiques

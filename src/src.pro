@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS = unlimited-multitask
+SUBDIRS = unlimited-multitask control-center
