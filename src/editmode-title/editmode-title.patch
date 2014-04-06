@@ -1,0 +1,20 @@
+--- original/Launcher.qml   2014-04-05 18:14:43.671356007 +0200
++++ patched/Launcher.qml    2014-04-05 18:43:25.786030732 +0200
+@@ -282,7 +282,6 @@
+                 color: down ? Theme.highlightColor : Theme.primaryColor
+                 font.pixelSize: Theme.fontSizeTiny
+                 text: object.title
+-                visible: !desktop.removeApplicationEnabled
+             }
+ 
+             Rectangle {
+@@ -290,8 +289,7 @@
+                 width: Theme.iconSizeMedium / 2
+                 height: width
+                 radius: width/2
+-                anchors.verticalCenter: icon.bottom
+-                anchors.horizontalCenter: parent.horizontalCenter
++                anchors.right: parent.right
+                 opacity: desktop.removeApplicationEnabled ? 1.0 : 0.0
+                 visible: desktop.removeApplicationEnabled && appControl.isUninstallable(object.filePath)
+ 
