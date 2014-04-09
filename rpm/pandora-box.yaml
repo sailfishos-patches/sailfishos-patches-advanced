@@ -11,9 +11,8 @@ Description: "The pandora box contains Sailfish OS \nhomescreen. Opening it allo
   patching\nit and features tweaking. \n\nThis package contains some tweaks for\nlipstick-pandora,
   that can be used by \npatchmanager."
 Configure: none
-Builder: qtc5
-PkgConfigBR:
-- Qt5Core
+Builder: none
+PkgConfigBR: []
 Requires:
 - patchmanager
 Files:

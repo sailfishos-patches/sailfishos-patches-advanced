@@ -6,12 +6,9 @@
 Name:       pandora-box
 
 # >> macros
+BuildArch: noarch
 # << macros
 
-%{!?qtc_qmake:%define qtc_qmake %qmake}
-%{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
-%{!?qtc_make:%define qtc_make make}
-%{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    pandora-box
 Version:    0.1
 Release:    1
@@ -21,7 +18,6 @@ URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  pandora-box.yaml
 Requires:   patchmanager
-BuildRequires:  pkgconfig(Qt5Core)
 
 %description
 The pandora box contains Sailfish OS 
@@ -42,9 +38,7 @@ patchmanager.
 # >> build pre
 # << build pre
 
-%qtc_qmake5 
 
-%qtc_make %{?_smp_mflags}
 
 # >> build post
 # << build post
@@ -52,8 +46,10 @@ patchmanager.
 %install
 rm -rf %{buildroot}
 # >> install pre
+mkdir -p %{buildroot}/usr/share/patchmanager/patches/
+mv src/pandora-control-center %{buildroot}/usr/share/patchmanager/patches/
+mv src/pandora-unlimited-multitask %{buildroot}/usr/share/patchmanager/patches/
 # << install pre
-%qmake5_install
 
 # >> install post
 # << install post
