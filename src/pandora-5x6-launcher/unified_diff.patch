@@ -1,0 +1,39 @@
+diff -ur original/Launcher.qml patched/Launcher.qml
+--- original/opt/lipstick-pandora/qml/Launcher.qml	2014-04-02 13:14:43.671356007 +0200
++++ patched/opt/lipstick-pandora/qml/Launcher.qml	2014-04-10 17:56:16.226549275 +0200
+@@ -15,7 +15,7 @@
+     id: gridview
+ 
+     property Item reorderItem
+-    property int columns: 4
++    property int columns: 5
+     property int initialCellWidth: (desktop.width - Theme.paddingLarge * 2) / columns
+     property real firstRowOpacity: Math.min(Math.max((dashboard.contentY - dashboard.lockscreenAndStatusAreaHeight)/cellHeight, 0.0), 1.0)
+     property bool removeApplicationMode
+@@ -251,18 +251,21 @@
+                 NumberAnimation { target: launcherItem; property: "opacity"; to: 1.0; duration: 75 }
+             }
+ 
+-            Image {
++            Item {
+                 id:icon
+                 anchors.horizontalCenter: parent.horizontalCenter
+-                y: Math.round(index <= 3 ? (parent.height / 2) - (height / 2) : (parent.height / 2) - ((height + launcherText.height) / 2))
+-                source: (model.object.iconId.indexOf("/") == 0 ? "file://" : "image://theme/") + model.object.iconId
+-                sourceSize.width: Theme.iconSizeLauncher
+-                sourceSize.height: Theme.iconSizeLauncher
++                y: Math.round(index < 5 ? (parent.height / 2) - (height / 2) : (parent.height / 2) - ((height + launcherText.height) / 2))
+                 width: Theme.iconSizeLauncher
+                 height: Theme.iconSizeLauncher
++            Image {
++                source: (model.object.iconId.indexOf("/") == 0 ? "file://" : "image://theme/") + model.object.iconId
++                anchors.centerIn: parent
++                sourceSize.width: Theme.iconSizeLauncher * 0.8
++                sourceSize.height: Theme.iconSizeLauncher * 0.8
+                 layer.effect: pressEffectComponent
+                 layer.enabled: down
+             }
++            }
+ 
+             Label {
+                 id: launcherText
