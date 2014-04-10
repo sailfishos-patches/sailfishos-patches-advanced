@@ -2,11 +2,5 @@
     "name": "Control center",
     "description": "A Pandora patch that adds a control center instead of right ambience switcher",
     "category": "Pandora",
-    "infos": {},
-    "patches": [
-        {
-            "dir": "/opt/lipstick-pandora/qml",
-            "patch": "control-center.patch"
-        }
-    ]
+    "infos": {}
 }

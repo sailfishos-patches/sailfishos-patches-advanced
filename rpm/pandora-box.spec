@@ -49,6 +49,7 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-control-center %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-unlimited-multitask %{buildroot}/usr/share/patchmanager/patches/
+mv src/pandora-swipe-feedback %{buildroot}/usr/share/patchmanager/patches/
 # << install pre
 
 # >> install post

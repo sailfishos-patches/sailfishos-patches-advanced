@@ -2,11 +2,5 @@
     "name": "Unlimited multitask",
     "description": "A Pandora patch that provides unlimited multitask",
     "category": "Pandora",
-    "infos": {},
-    "patches": [
-        {
-            "dir": "/opt/lipstick-pandora/qml",
-            "patch": "unlimited.patch"
-        }
-    ]
+    "infos": {}
 }

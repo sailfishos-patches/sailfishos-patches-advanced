@@ -1,0 +1,56 @@
+diff -ur original/compositor.qml patched/compositor.qml
+--- original/opt/lipstick-pandora/qml/compositor.qml	2014-04-02 13:14:43.624355672 +0200
++++ patched/opt/lipstick-pandora/qml/compositor.qml	2014-04-10 17:22:10.192739937 +0200
+@@ -189,6 +189,7 @@
+     }
+ 
+     PeekFilter.onGestureCanceled: {
++        appLayerBehavior.enabled = true
+         if (singleAlarmDismissPeek) {
+             alarmsLayer.showAlarm(alarmsLayer.alarmWindowToBeClosed)
+             alarmsLayer.alarmWindowToBeClosed = null
+@@ -196,6 +197,8 @@
+     }
+ 
+     PeekFilter.onGestureStarted: {
++        appLayerAnimation.stop()
++        appLayerBehavior.enabled = false
+         if (singleAlarmDismissPeek) {
+             alarmsLayer.alarmWindowToBeClosed = root.topmostAlarmWindow
+         }
+@@ -407,12 +410,32 @@
+ 
+         Item {
+             id: appLayer
++            width: parent.width
++            height: parent.height
+ 
+-            anchors.fill: parent
++            anchors {
++                left: PeekFilter.activeArea != root.rightArea ? parent.left : undefined
++                right: PeekFilter.activeArea != root.leftArea ? parent.right : undefined
++                top: parent.top
++                bottom: PeekFilter.activeArea != root.topArea ? parent.bottom : undefined
++                leftMargin: root.appActive && PeekFilter.activeArea == root.leftArea ? appLayer._realProcessDistance : 0
++                rightMargin: root.appActive && PeekFilter.activeArea == root.rightArea ? appLayer._realProcessDistance : 0
++                topMargin: root.appActive && PeekFilter.activeArea == root.topArea ? appLayer._realProcessDistance : 0
++            }
++            
++            Behavior on anchors.leftMargin {
++                id: appLayerBehavior
++                enabled: false
++                NumberAnimation {
++                    id: appLayerAnimation
++                    duration: 200
++                }
++            }
+ 
+             z: 2
+-                    
+-            opacity: root.topmostApplicationWindow != null ? (!homePeek && (root.eventsActive || eventPeek || root.alarmActive) ? 1 : (root.appActive ? (1 - Math.min(1, PeekFilter.progress)) : (appPeek ? Math.min(1, PeekFilter.progress) : 0))) : 0
++            readonly property real _progressDistance: PeekFilter.progress * PeekFilter.threshold            
++            readonly property real _realProcessDistance:  root.topmostApplicationWindow != null ? (!homePeek && (root.eventsActive || eventPeek || root.alarmActive) ? 0 : (root.appActive ? _progressDistance : 0)) : 0
++            opacity: root.topmostApplicationWindow != null ? (!homePeek && (root.eventsActive || eventPeek || root.alarmActive) ? 1 : (root.appActive ? (1 - 0.8 * Math.min(1, PeekFilter.progress)) : (appPeek ? Math.min(1, PeekFilter.progress) : 0))) : 0
+             visible: opacity > 0 // TODO: scenegraph should cull, but doesn't seem to do so. investigate.
+             enabled: root.appActive
+ 
