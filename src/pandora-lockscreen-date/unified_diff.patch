@@ -1,0 +1,40 @@
+diff -ur original/Lockscreen.qml patched/Lockscreen.qml
+--- original/opt/lipstick-pandora/qml/Lockscreen.qml	2014-04-02 13:14:43.677356050 +0200
++++ patched/opt/lipstick-pandora/qml/Lockscreen.qml	2014-04-10 18:50:26.177308182 +0200
+@@ -75,6 +75,15 @@
+             offTimer.restart()
+         }
+     }
++    
++    Label {
++        anchors.bottom: clock.top
++        anchors.horizontalCenter: parent.horizontalCenter
++        text: {
++            var dateString = Format.formatDate(wallClock.time, Format.DateFull)
++            return dateString.charAt(0).toUpperCase() + dateString.substr(1)
++        }
++    }
+ 
+     Clock {
+         id: clock
+diff -ur original/main.qml patched/main.qml
+--- original/opt/lipstick-pandora/qml/main.qml	2014-04-02 13:14:43.684356100 +0200
++++ patched/opt/lipstick-pandora/qml/main.qml	2014-04-10 18:39:47.247640213 +0200
+@@ -395,7 +395,7 @@
+                           : qsTrId("lipstick-jolla-home-me-sounds_off")
+                     onClicked: { profileControl.profile = profileControl.profile == "silent" ? "ambience" : "silent" }
+                 }
+-                MenuLabel {
++                /*MenuLabel {
+                     id: date
+                     text: {
+                         var dateString = Format.formatDate(wallClock.time, Format.DateFull)
+@@ -406,7 +406,7 @@
+                         enabled: pullDownMenu.active
+                         updateFrequency: WallClock.Day
+                     }
+-                }
++                }*/
+ 
+                 onActiveChanged: if (active) LipstickSettings.lockscreenVisible = true
+             }

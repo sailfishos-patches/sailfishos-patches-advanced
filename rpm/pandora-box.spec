@@ -50,6 +50,7 @@ mkdir -p %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-5x6-launcher %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-control-center %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-editmode-title %{buildroot}/usr/share/patchmanager/patches/
+mv src/pandora-lockscreen-date %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-unlimited-multitask %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-swipe-feedback %{buildroot}/usr/share/patchmanager/patches/
 # << install pre
