@@ -1,55 +1,159 @@
 diff -ur original/compositor.qml patched/compositor.qml
---- original/opt/lipstick-pandora/qml/compositor.qml	2014-04-02 13:14:43.624355672 +0200
-+++ patched/opt/lipstick-pandora/qml/compositor.qml	2014-04-10 17:22:10.192739937 +0200
-@@ -189,6 +189,7 @@
-     }
- 
-     PeekFilter.onGestureCanceled: {
-+        appLayerBehavior.enabled = true
-         if (singleAlarmDismissPeek) {
+--- original/opt/lipstick-pandora/qml/compositor.qml	2014-04-11 18:27:26.050184002 +0200
++++ patched/opt/lipstick-pandora/qml/compositor.qml	2014-04-11 18:58:44.549885640 +0200
+@@ -193,6 +193,14 @@
              alarmsLayer.showAlarm(alarmsLayer.alarmWindowToBeClosed)
              alarmsLayer.alarmWindowToBeClosed = null
-@@ -196,6 +197,8 @@
+         }
++
++        if (root.homePeeking) {
++            if (PeekFilter.activeArea == PeekFilter.Left || PeekFilter.activeArea == PeekFilter.Right) {
++                appLayer.state = "horizontalCancel"
++            } else if (PeekFilter.activeArea == PeekFilter.Top || PeekFilter.activeArea == PeekFilter.Bottom) {
++                appLayer.state = "verticalCancel"
++            }
++        }
      }
  
      PeekFilter.onGestureStarted: {
-+        appLayerAnimation.stop()
-+        appLayerBehavior.enabled = false
-         if (singleAlarmDismissPeek) {
-             alarmsLayer.alarmWindowToBeClosed = root.topmostAlarmWindow
+@@ -202,6 +210,14 @@
+         if (eventPeek && root.topmostAlarmWindow) {
+             eventsLayer.aboveAlarms = true
          }
-@@ -407,12 +410,32 @@
++
++        if (root.homePeeking) {
++            if (PeekFilter.activeArea == PeekFilter.Left || PeekFilter.activeArea == PeekFilter.Right) {
++                appLayer.state = "horizontalMove"
++            } else if (PeekFilter.activeArea == PeekFilter.Top || PeekFilter.activeArea == PeekFilter.Bottom) {
++                appLayer.state = "verticalMove"
++            }
++        }
+     }
  
+     PeekFilter.onActiveChanged: {
+@@ -412,11 +428,124 @@
          Item {
              id: appLayer
-+            width: parent.width
-+            height: parent.height
  
 -            anchors.fill: parent
-+            anchors {
-+                left: PeekFilter.activeArea != root.rightArea ? parent.left : undefined
-+                right: PeekFilter.activeArea != root.leftArea ? parent.right : undefined
-+                top: parent.top
-+                bottom: PeekFilter.activeArea != root.topArea ? parent.bottom : undefined
-+                leftMargin: root.appActive && PeekFilter.activeArea == root.leftArea ? appLayer._realProcessDistance : 0
-+                rightMargin: root.appActive && PeekFilter.activeArea == root.rightArea ? appLayer._realProcessDistance : 0
-+                topMargin: root.appActive && PeekFilter.activeArea == root.topArea ? appLayer._realProcessDistance : 0
++            anchors.centerIn: parent
++            anchors.horizontalCenterOffset: 0
++            anchors.verticalCenterOffset: 0
++            width: parent.width
++            height: parent.height
++            
++            readonly property int _horizontalSwipeCoefficient: PeekFilter.activeArea == PeekFilter.Left ? 1 : (PeekFilter.activeArea == PeekFilter.Right ? -1 : 0)
++            readonly property int _verticalSwipeCoefficient: PeekFilter.activeArea == PeekFilter.Top ? 1 : (PeekFilter.activeArea == PeekFilter.Bottom ? -1 : 0)
++            readonly property real _progressDistance: PeekFilter.progress * PeekFilter.threshold
++            
++            Binding {
++                id: horizontalSwipeBinding
++                target: appLayer
++                property: "anchors.horizontalCenterOffset"
++                value: appLayer._horizontalSwipeCoefficient * appLayer._progressDistance
++                when: false
++            }
++
++            Binding {
++                id: verticalSwipeBinding
++                target: appLayer
++                property: "anchors.verticalCenterOffset"
++                value: appLayer._verticalSwipeCoefficient * appLayer._progressDistance
++                when: false
 +            }
 +            
-+            Behavior on anchors.leftMargin {
-+                id: appLayerBehavior
-+                enabled: false
-+                NumberAnimation {
-+                    id: appLayerAnimation
-+                    duration: 200
++            states: [
++                State {
++                    name: "default"
++                    PropertyChanges {
++                        target: appLayer
++                        anchors.horizontalCenterOffset: 0
++                        anchors.verticalCenterOffset: 0
++                    }
++                },
++                State {
++                    name: "horizontalMove"
++                    PropertyChanges {
++                        target: horizontalSwipeBinding
++                        when: true
++                    }
++                    PropertyChanges {
++                        target: appLayer
++                        anchors.verticalCenterOffset: 0
++                    }
++                }, State {
++                    name: "horizontalCancel"
++                    PropertyChanges {
++                        target: horizontalSwipeBinding
++                        when: false
++                    }
++                    PropertyChanges {
++                        target: appLayer
++                        anchors.horizontalCenterOffset: 0
++                        anchors.verticalCenterOffset: 0
++                    }
++                }, State {
++                    name: "verticalMove"
++                    PropertyChanges {
++                        target: verticalSwipeBinding
++                        when: true
++                    }
++                    PropertyChanges {
++                        target: appLayer
++                        anchors.horizontalCenterOffset: 0
++                    }
++                }, State {
++                    name: "verticalCancel"
++                    PropertyChanges {
++                        target: verticalSwipeBinding
++                        when: false
++                    }
++                    PropertyChanges {
++                        target: appLayer
++                        anchors.horizontalCenterOffset: 0
++                        anchors.verticalCenterOffset: 0
++                    }
 +                }
-+            }
++            ]
++
++            transitions: [
++                Transition {
++                    to: "horizontalCancel"
++                    SequentialAnimation {
++                        PropertyAnimation {
++                            target: appLayer
++                            property: "anchors.horizontalCenterOffset"
++                            duration: 200
++                            easing.type: Easing.OutBack
++                        }
++                        PropertyAction {
++                            target: appLayer
++                            property: "state"
++                            value: "default"
++                        }
++                    }
++                },
++                Transition {
++                    to: "verticalCancel"
++                    SequentialAnimation {
++                        PropertyAnimation {
++                            target: appLayer
++                            property: "anchors.verticalCenterOffset"
++                            duration: 200
++                            easing.type: Easing.OutBack
++                        }
++                        PropertyAction {
++                            target: appLayer
++                            property: "state"
++                            value: "default"
++                        }
++                    }
++                }
++            ]
  
              z: 2
--                    
+                     
 -            opacity: root.topmostApplicationWindow != null ? (!homePeek && (root.eventsActive || eventPeek || root.alarmActive) ? 1 : (root.appActive ? (1 - Math.min(1, PeekFilter.progress)) : (appPeek ? Math.min(1, PeekFilter.progress) : 0))) : 0
-+            readonly property real _progressDistance: PeekFilter.progress * PeekFilter.threshold            
-+            readonly property real _realProcessDistance:  root.topmostApplicationWindow != null ? (!homePeek && (root.eventsActive || eventPeek || root.alarmActive) ? 0 : (root.appActive ? _progressDistance : 0)) : 0
 +            opacity: root.topmostApplicationWindow != null ? (!homePeek && (root.eventsActive || eventPeek || root.alarmActive) ? 1 : (root.appActive ? (1 - 0.8 * Math.min(1, PeekFilter.progress)) : (appPeek ? Math.min(1, PeekFilter.progress) : 0))) : 0
              visible: opacity > 0 // TODO: scenegraph should cull, but doesn't seem to do so. investigate.
              enabled: root.appActive
