@@ -1,0 +1,25 @@
+diff -ur original/Switcher.qml patched/Switcher.qml
+--- original/opt/lipstick-pandora/qml/Switcher.qml	2014-04-11 18:27:26.136184697 +0200
++++ patched/opt/lipstick-pandora/qml/Switcher.qml	2014-04-14 18:57:02.096244521 +0200
+@@ -95,7 +95,7 @@
+             top: parent.top
+             margins: Theme.paddingLarge
+         }
+-        columns: 2
++        columns: 3
+ 
+         spacing: Theme.paddingLarge
+         property int windowWidth: columns == 2 ? Theme.coverSizeLarge.width : Theme.coverSizeSmall.width
+@@ -103,9 +103,9 @@
+ 
+         function updateColumns() {
+             // use a timer since switcherModel and pendingWindows models aren't in sync.
+-            if (!desktop.closeApplicationEnabled) {
+-                columnUpdateTimer.restart()
+-            }
++            // if (!desktop.closeApplicationEnabled) {
++            //     columnUpdateTimer.restart()
++            // }
+         }
+ 
+         Timer {
