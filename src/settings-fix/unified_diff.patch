@@ -1,6 +1,6 @@
---- original/usr/share/jolla-settings/pages/sounds/VolumeSlider.qml	2014-04-17 12:30:14.590463506 +0200
-+++ patched/usr/share/jolla-settings/pages/sounds/VolumeSlider.qml	2014-04-17 13:16:06.144731584 +0200
-@@ -13,13 +13,59 @@
+--- original/usr/share/jolla-settings/pages/sounds/VolumeSlider.qml	2014-04-17 15:41:33.717726166 +0200
++++ patched/usr/share/jolla-settings/pages/sounds/VolumeSlider.qml	2014-04-17 15:41:09.436544607 +0200
+@@ -13,13 +13,65 @@
      label: qsTrId("settings_sounds_la_volume")
      maximumValue: 100
      minimumValue: 1
@@ -56,9 +56,15 @@
 +                        
 +            // We are probably in lipstick
 +            if (systemSlider.target != slider) {
-+                slider.value = profileControl.volumeLevel("general")
-+                lipstickSlider.target = slider
-+                lipstickProfileControl.target = profileControl
++                if (typeof profileControl !== "undefined") {
++                    slider.value = profileControl.volumeLevel("general")
++                    lipstickSlider.target = slider
++                    lipstickProfileControl.target = profileControl
++                } else {
++                    slider.visible = false
++                    slider.enabled = false
++                    slider.height = 0
++                }
 +            }
 +        }
 +        // onRingerVolumeChanged: slider.value = profileControl.ringerVolume
