@@ -54,6 +54,7 @@ mv src/pandora-force-3x3-multitask %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-lockscreen-date %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-unlimited-multitask %{buildroot}/usr/share/patchmanager/patches/
 mv src/pandora-swipe-feedback %{buildroot}/usr/share/patchmanager/patches/
+mv src/settings-fix %{buildroot}/usr/share/patchmanager/patches/
 # << install pre
 
 # >> install post
