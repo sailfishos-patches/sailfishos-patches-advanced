@@ -1,4 +1,3 @@
-diff -ur original/Launcher.qml patched/Launcher.qml
 --- original/opt/lipstick-pandora/qml/Launcher.qml	2014-04-11 18:27:26.095184366 +0200
 +++ patched/opt/lipstick-pandora/qml/Launcher.qml	2014-04-11 19:09:14.563565300 +0200
 @@ -15,7 +15,7 @@

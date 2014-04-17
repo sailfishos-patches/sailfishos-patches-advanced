@@ -1,4 +1,3 @@
-diff -u original/Launcher.qml patched/Launcher.qml
 --- original/opt/lipstick-pandora/qml/Launcher.qml	2014-04-02 13:14:43.671356007 +0200
 +++ patched/opt/lipstick-pandora/qml/Launcher.qml	2014-04-04 14:43:25.786030732 +0200
 @@ -17,7 +17,8 @@
@@ -11,7 +10,6 @@ diff -u original/Launcher.qml patched/Launcher.qml
      property bool removeApplicationMode
      property Item remorse
      property var launchingItems: []
-diff -u original/main.qml patched/main.qml
 --- original/opt/lipstick-pandora/qml/main.qml	2014-04-02 13:14:43.684356100 +0200
 +++ patched/opt/lipstick-pandora/qml/main.qml	2014-04-04 14:57:44.855545883 +0200
 @@ -38,7 +38,7 @@
@@ -107,7 +105,6 @@ diff -u original/main.qml patched/main.qml
                                  var obj = dashboard.model.get(dashboard.model.count-1)
                                  dashboard.model.remove(dashboard.model.count-1)
                              }
-diff -u original/Switcher.qml patched/Switcher.qml
 --- original/opt/lipstick-pandora/qml/Switcher.qml	2014-04-02 13:14:43.718356343 +0200
 +++ patched/opt/lipstick-pandora/qml/Switcher.qml	2014-04-04 14:43:25.788030744 +0200
 @@ -19,8 +19,9 @@
