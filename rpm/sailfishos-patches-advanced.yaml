@@ -17,4 +17,4 @@ PkgBR: []
 Requires:
 - patchmanager
 Files:
-- '%{_datadir}/patchmanager/adv-*'
+- '%{_datadir}/patchmanager/patches/adv-*'

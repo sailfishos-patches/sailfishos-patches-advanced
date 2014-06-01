@@ -42,9 +42,9 @@ require extra care when being applied.
 %install
 rm -rf %{buildroot}
 # >> install pre
-mkdir -p %{buildroot}/usr/share/patchmanager
+mkdir -p %{buildroot}/usr/share/patchmanager/patches
 for f in $(ls maintained); do
-cp -r maintained/$f %{buildroot}/usr/share/patchmanager/adv-$f
+cp -r maintained/$f %{buildroot}/usr/share/patchmanager/patches/adv-$f
 done
 # << install pre
 
@@ -53,6 +53,6 @@ done
 
 %files
 %defattr(-,root,root,-)
-%{_datadir}/patchmanager/adv-*
+%{_datadir}/patchmanager/patches/adv-*
 # >> files
 # << files
