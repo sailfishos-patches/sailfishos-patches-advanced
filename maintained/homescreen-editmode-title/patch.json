@@ -1,0 +1,8 @@
+{
+    "name": "Title visible in edit mode",
+    "description": "A homescreen patch that allows the title to be visible when organizing icons",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "Lucien Xu"
+    }
+}

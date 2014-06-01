@@ -1,0 +1,8 @@
+{
+    "name": "5x6 launcher",
+    "description": "A homescreen patch that provides a launcher with 5 icons per row",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "Lucien Xu"
+    }
+}

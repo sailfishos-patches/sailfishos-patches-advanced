@@ -1,0 +1,20 @@
+Name: sailfishos-patches-advanced
+Summary: A set of advanced patches
+Version: 0.0
+Release: 1
+Group: Qt/Qt
+URL: https://github.com/sailfishos-patches/sailfishos-patches-advanced
+License: TODO
+Sources:
+- '%{name}-%{version}.tar.bz2'
+Description: |
+  This package contains a set of advanced that might
+  require extra care when being applied.
+Configure: none
+Builder: none
+PkgConfigBR: []
+PkgBR: []
+Requires:
+- patchmanager
+Files:
+- '%{_datadir}/patchmanager/adv-*'

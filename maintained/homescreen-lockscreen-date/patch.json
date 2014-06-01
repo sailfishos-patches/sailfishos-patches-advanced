@@ -1,0 +1,8 @@
+{
+    "name": "Date on lockscreen",
+    "description": "A homescreen patch that displays date on the lockscreen",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "Lucien Xu"
+    }
+}

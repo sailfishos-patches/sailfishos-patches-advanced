@@ -1,0 +1,8 @@
+{
+    "name": "Control center in events view",
+    "description": "A homescreen patch that adds a control center to the events view",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "Lucien Xu"
+    }
+}
