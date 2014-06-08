@@ -1,25 +1,26 @@
---- original/opt/lipstick-pandora/qml/AmbiencePage.qml	2014-04-03 09:24:07.378635010 +0200
-+++ patched/opt/lipstick-pandora/qml/AmbiencePage.qml	2014-04-03 09:59:36.329082548 +0200
-@@ -14,6 +14,8 @@
- import org.nemomobile.lipstick 0.1
- import com.jolla.lipstick 0.1
- import "compositor"
+--- original/usr/share/lipstick-jolla-home-qt5/qml/AmbiencePage.qml	2014-06-08 21:55:01.862978516 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/AmbiencePage.qml	2014-06-08 22:45:58.007084002 +0200
+@@ -9,6 +9,8 @@
+ import Sailfish.Silica 1.0
+ import Sailfish.Ambience 1.0
+ import Sailfish.Gallery 1.0
 +import com.jolla.settings 1.0
 +import org.nemomobile.systemsettings 1.0
- 
- Page {
-     id: page
-@@ -39,6 +41,9 @@
-     readonly property bool _switcherEnabled: !deviceIsLocked && (!progressAnimation.running && !contentAnimation.running)
+ import org.nemomobile.configuration 1.0
+ import org.nemomobile.thumbnailer 1.0
+ import org.nemomobile.lipstick 0.1
+@@ -32,6 +34,10 @@
                  && (ambienceSwitcherOpen || (ambienceSwitcherEnabled && ambienceModel.count > 1))
                  && (PeekFilter.activeArea == PeekFilter.Left || PeekFilter.activeArea == PeekFilter.Right) && Lipstick.compositor.homeActive
+                 && !launcher.openedChildFolder && !desktop.closeApplicationEnabled
 +    readonly property bool _switcherLockEnabled: (!progressAnimation.running && !contentAnimation.running)
 +                && (ambienceSwitcherOpen || (ambienceSwitcherEnabled && ambienceModel.count > 1))
 +                && (PeekFilter.activeArea == PeekFilter.Left || PeekFilter.activeArea == PeekFilter.Right) && Lipstick.compositor.homeActive
++                && !launcher.openedChildFolder && !desktop.closeApplicationEnabled
  
      property string _currentHomeWallpaper: Ambience.homeWallpaper
  
-@@ -49,7 +54,9 @@
+@@ -42,7 +48,9 @@
      }
  
      PeekFilter.onGestureStarted: {
@@ -30,7 +31,7 @@
              anchorAmbienceItem()
              progressBinding.when = true
          }
-@@ -134,6 +141,16 @@
+@@ -120,6 +128,16 @@
              ambienceItem.anchors.right = undefined
              ambienceItem.anchors.left = contentItem.right
          }
@@ -47,7 +48,7 @@
      }
  
      property real _progress
-@@ -270,6 +287,17 @@
+@@ -210,6 +228,17 @@
          anchors.left: contentItem.right
          // Scenegraph does not seem to cull yet, explicitly hide
          visible: contentItem.x != 0 || page.ambienceSwitcherOpen
@@ -64,4 +65,4 @@
 +        }
  
          ImageGridView {
-             id: grid
+             id: gridView

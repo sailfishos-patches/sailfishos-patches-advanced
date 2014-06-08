@@ -1,46 +1,36 @@
---- original/opt/lipstick-pandora/qml/Launcher.qml	2014-04-11 18:27:26.095184366 +0200
-+++ patched/opt/lipstick-pandora/qml/Launcher.qml	2014-04-11 19:09:14.563565300 +0200
-@@ -15,7 +15,7 @@
-     id: gridview
+--- original/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-08 21:55:01.847978384 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-08 22:14:11.587192377 +0200
+@@ -17,7 +17,7 @@
  
      property Item reorderItem
+     property Item movingItem
 -    property int columns: 4
 +    property int columns: 5
      property int initialCellWidth: (desktop.width - Theme.paddingLarge * 2) / columns
      property real firstRowOpacity: Math.min(Math.max((dashboard.contentY - dashboard.lockscreenAndStatusAreaHeight)/cellHeight, 0.0), 1.0)
      property bool removeApplicationMode
-@@ -255,10 +255,14 @@
-                 NumberAnimation { target: launcherItem; property: "opacity"; to: 1.0; duration: 75 }
-             }
+@@ -31,7 +31,7 @@
+     width: cellWidth * columns
+     anchors.horizontalCenter: parent.horizontalCenter
+     // Increase cellWidth so that icon vertical edges are Theme.paddingLarge away from display edges
+-    cellWidth: Math.round(initialCellWidth + (initialCellWidth - Theme.iconSizeLauncher) / (columns - 1))
++    cellWidth: Math.round(initialCellWidth + (initialCellWidth - Theme.iconSizeLauncher * 0.8) / (columns - 1))
+     cellHeight: Math.round(Screen.height / 6)
  
--            Image {
-+            Item {
-                 id:icon
-                 anchors.horizontalCenter: parent.horizontalCenter
--                y: Math.round(index <= 3 ? (parent.height / 2) - (height / 2) : (parent.height / 2) - ((height + launcherText.height) / 2))
-+                y: Math.round(index < 5 ? (parent.height / 2) - (height / 2) : (parent.height / 2) - ((height + launcherText.height) / 2))
-+                width: Theme.iconSizeLauncher
-+                height: Theme.iconSizeLauncher
-+            Image {
-+                anchors.centerIn: parent
-                 source: {
-                     var iconId = model.object.iconId
-                     if (iconId.indexOf(':/') !== -1) {
-@@ -269,14 +273,13 @@
-                         return 'image://theme/' + iconId
-                     }
+     function showFolder(folder) {
+@@ -366,10 +366,14 @@
+                 id: launcherIcon
+                 anchors {
+                     centerIn: parent
+-                    verticalCenterOffset: rootFolder && index <= 3  ? 0 : Math.round(-launcherText.height/2)
++                    verticalCenterOffset: rootFolder && index < gridview.columns  ? 0 : Math.round(-launcherText.height/2)
                  }
--                sourceSize.width: Theme.iconSizeLauncher
--                sourceSize.height: Theme.iconSizeLauncher
--                width: Theme.iconSizeLauncher
--                height: Theme.iconSizeLauncher
+                 icon: model.object.iconId
+                 pressed: down
++                width: Theme.iconSizeLauncher * 0.8
++                height: Theme.iconSizeLauncher * 0.8
 +                sourceSize.width: Theme.iconSizeLauncher * 0.8
 +                sourceSize.height: Theme.iconSizeLauncher * 0.8
-                 layer.effect: pressEffectComponent
-                 layer.enabled: down
-                 opacity: model.object.isUpdating ? 0.2 : 1.0
-             }
-+            }
- 
-             BusyIndicator {
-                 anchors.centerIn: icon
+                 opacity: isUpdating && folderItemCount == 0 ? 0.2 : 1.0
+                 Text {
+                     font.pixelSize: Theme.fontSizeExtraLarge

@@ -1,20 +1,21 @@
---- original/opt/lipstick-pandora/qml/Launcher.qml   2014-04-05 18:14:43.671356007 +0200
-+++ patched/opt/lipstick-pandora/qml/Launcher.qml    2014-04-05 18:43:25.786030732 +0200
-@@ -282,7 +282,6 @@
+--- original/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-08 21:55:01.847978384 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-08 22:22:42.694643060 +0200
+@@ -400,7 +400,6 @@
                  color: down ? Theme.highlightColor : Theme.primaryColor
                  font.pixelSize: Theme.fontSizeTiny
                  text: object.title
--                visible: !desktop.removeApplicationEnabled
+-                visible: !removeApplicationEnabled
              }
  
-             Rectangle {
-@@ -290,8 +289,7 @@
-                 width: Theme.iconSizeMedium / 2
-                 height: width
-                 radius: width/2
--                anchors.verticalCenter: icon.bottom
--                anchors.horizontalCenter: parent.horizontalCenter
-+                anchors.right: parent.right
-                 opacity: desktop.removeApplicationEnabled ? 1.0 : 0.0
-                 visible: desktop.removeApplicationEnabled && appControl.isUninstallable(object.filePath)
- 
+             Component {
+@@ -422,8 +421,7 @@
+             Component {
+                 id: uninstallButtonComponent
+                 UninstallButton {
+-                    anchors.verticalCenter: launcherIcon.bottom
+-                    anchors.horizontalCenter: parent.horizontalCenter
++                    anchors.verticalCenter: launcherIcon.top
++                    anchors.right: parent.right
+                     enabled: removeApplicationEnabled
+                     opacity: enabled ? 1.0 : 0.0
+                     visible: removeApplicationEnabled && itemType == LauncherModel.Application && appControl.isUninstallable(object.filePath) && !object.isUpdating

@@ -1,6 +1,5 @@
-diff -u original/EventsView.qml patched/EventsView.qml
---- original/opt/lipstick-pandora/qml/EventsView.qml	2014-04-16 20:11:29.235787000 +0300
-+++ patched/opt/lipstick-pandora/qml/EventsView.qml	2014-04-16 20:12:27.938427102 +0300
+--- original/usr/share/lipstick-jolla-home-qt5/qml/EventsView.qml	2014-04-16 20:11:29.235787000 +0300
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/EventsView.qml	2014-04-16 20:12:27.938427102 +0300
 @@ -15,6 +15,8 @@
  import org.nemomobile.configuration 1.0
  import Sailfish.Accounts 1.0

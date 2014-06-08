@@ -1,5 +1,5 @@
---- original/opt/lipstick-pandora/qml/compositor.qml	2014-04-11 18:27:26.050184002 +0200
-+++ patched/opt/lipstick-pandora/qml/compositor.qml	2014-04-11 18:58:44.549885640 +0200
+--- original/usr/share/lipstick-jolla-home-qt5/qml/compositor.qml	2014-04-11 18:27:26.050184002 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/compositor.qml	2014-04-11 18:58:44.549885640 +0200
 @@ -193,6 +193,14 @@
              alarmsLayer.showAlarm(alarmsLayer.alarmWindowToBeClosed)
              alarmsLayer.alarmWindowToBeClosed = null
