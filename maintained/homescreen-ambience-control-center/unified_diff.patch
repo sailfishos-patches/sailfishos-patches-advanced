@@ -38,10 +38,10 @@
 +        
 +        if (!ambienceSwitcherOpen) {
 +            if (PeekFilter.activeArea == PeekFilter.Right) {
-+                grid.visible = false
++                gridView.visible = false
 +                widgets.visible = true
 +            } else {
-+                grid.visible = true
++                gridView.visible = true
 +                widgets.visible = false
 +            }
 +        }

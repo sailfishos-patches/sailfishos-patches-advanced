@@ -1,5 +1,5 @@
 --- original/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-08 21:55:01.847978384 +0200
-+++ patched/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-08 22:22:42.694643060 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-15 12:28:18.029087835 +0200
 @@ -400,7 +400,6 @@
                  color: down ? Theme.highlightColor : Theme.primaryColor
                  font.pixelSize: Theme.fontSizeTiny
@@ -8,7 +8,7 @@
              }
  
              Component {
-@@ -422,8 +421,7 @@
+@@ -422,8 +421,8 @@
              Component {
                  id: uninstallButtonComponent
                  UninstallButton {

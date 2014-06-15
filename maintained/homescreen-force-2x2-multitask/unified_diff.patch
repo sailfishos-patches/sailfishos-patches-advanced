@@ -1,0 +1,15 @@
+--- original/usr/share/lipstick-jolla-home-qt5/qml/Switcher.qml	2014-04-11 18:27:26.136184697 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/Switcher.qml	2014-04-14 18:57:02.096244521 +0200
+@@ -103,9 +103,9 @@
+ 
+         function updateColumns() {
+             // use a timer since switcherModel and pendingWindows models aren't in sync.
+-            if (!desktop.closeApplicationEnabled) {
+-                columnUpdateTimer.restart()
+-            }
++            // if (!desktop.closeApplicationEnabled) {
++            //     columnUpdateTimer.restart()
++            // }
+         }
+ 
+         Timer {
