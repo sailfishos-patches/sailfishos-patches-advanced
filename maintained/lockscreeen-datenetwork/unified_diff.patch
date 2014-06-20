@@ -1,0 +1,52 @@
+--- Lockscreen.qml	2014-06-19 14:13:25.000000000 +1200
++++ Lockscreen.qml	2014-06-19 14:35:19.413410000 +1200
+@@ -111,11 +111,14 @@
+     CellularNetworkNameStatusIndicator {
+         id: cellularNetworkNameStatusIndicator
+         anchors {
+-            top: parent.top
++            top: dateLabel.bottom
+             topMargin: Theme.paddingLarge
+             horizontalCenter: parent.horizontalCenter
+         }
+-        opacity: 1 - dateLabel.opacity
++        Behavior on opacity {
++                    id: cellularNetworkNameStatusOpacityBehavior
++                    FadeAnimation { }
++                }
+     }
+ 
+     Label {
+@@ -139,10 +142,10 @@
+             enabled: lockScreen.onDisplay
+             updateFrequency: WallClock.Day
+         }
+-        Behavior on opacity {
++        /*Behavior on opacity {
+             id: dateOpacityBehavior
+             FadeAnimation { }
+-        }
++        }*/
+     }
+ 
+     SimToolkitIdleModeIndicator {
+@@ -259,7 +262,7 @@
+ 
+     Timer {
+         id: hideDateTimer
+-        interval: 3000
++        interval: 1000
+         onTriggered: if (cellularNetworkNameStatusIndicator.homeNetwork || cellularNetworkNameStatusIndicator.visitorNetwork) lockScreen.state = "showCellularNetworkName"
+     }
+ 
+@@ -297,8 +300,8 @@
+         State {
+             name: "showCellularNetworkName"
+             PropertyChanges {
+-                target: dateLabel
+-                opacity: 0
++                target: CellularNetworkNameStatusIndicator
++                opacity: 1
+             }
+         }
+     ]
