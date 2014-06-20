@@ -1,0 +1,9 @@
+{
+    "name": "Date & Network",
+    "description": "This patch allows to show date and network name both on the lockscreen.",
+    "category": "Lockscreen",
+    "infos": {
+        "maintainer": "@Van_ess/van-ess0"
+    }
+}
+
