@@ -1,51 +1,34 @@
---- /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-06-19 14:37:37.000000000 +1200
-+++ /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-06-19 14:55:20.000000000 +1200
-@@ -111,11 +111,14 @@
-     CellularNetworkNameStatusIndicator {
-         id: cellularNetworkNameStatusIndicator
-         anchors {
--            top: parent.top
-+            top: dateLabel.bottom
-             topMargin: Theme.paddingLarge
-             horizontalCenter: parent.horizontalCenter
+--- /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-16 01:57:46.242647008 +0400
++++ /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-16 02:08:42.693373405 +0400
+@@ -126,7 +126,8 @@
+         CellularNetworkNameStatusIndicator {
+             id: cellularNetworkNameStatusIndicator
+             anchors.horizontalCenter: parent.horizontalCenter
+-            opacity: 1 - dateLabel.opacity
++            anchors.top: dateLabel.bottom
++	    opacity: dateLabel.opacity
          }
--        opacity: 1 - dateLabel.opacity
-+        Behavior on opacity {
-+                    id: cellularNetworkNameStatusOpacityBehavior
-+                    FadeAnimation { }
-+                }
-     }
  
-     Label {
-@@ -139,10 +142,10 @@
-             enabled: lockScreen.onDisplay
-             updateFrequency: WallClock.Day
+         Label {
+@@ -146,10 +147,11 @@
+                 enabled: lockScreen.onDisplay
+                 updateFrequency: WallClock.Day
+             }
+-            Behavior on opacity {
++            /*Behavior on opacity {
+                 id: dateOpacityBehavior
+                 FadeAnimation { }
+-            }
++            }*/
++	    opacity: 1
          }
--        Behavior on opacity {
-+        /*Behavior on opacity {
-             id: dateOpacityBehavior
-             FadeAnimation { }
--        }
-+        }*/
      }
  
-     SimToolkitIdleModeIndicator {
-@@ -259,7 +262,7 @@
- 
-     Timer {
-         id: hideDateTimer
--        interval: 5000
-+        interval: 3000
-         onTriggered: if (cellularNetworkNameStatusIndicator.homeNetwork || cellularNetworkNameStatusIndicator.visitorNetwork) lockScreen.state = "showCellularNetworkName"
-     }
- 
-@@ -297,8 +300,8 @@
-         State {
+@@ -313,7 +315,7 @@
              name: "showCellularNetworkName"
              PropertyChanges {
--                target: dateLabel
+                 target: dateLabel
 -                opacity: 0
-+                target: CellularNetworkNameStatusIndicator
 +                opacity: 1
              }
          }
