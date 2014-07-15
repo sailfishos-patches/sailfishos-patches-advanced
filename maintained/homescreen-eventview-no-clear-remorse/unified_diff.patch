@@ -1,0 +1,26 @@
+--- original/usr/share/lipstick-jolla-home-qt5/qml/EventsView.qml	2014-07-15 16:58:26.839394563 +0300
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/EventsView.qml	2014-07-15 16:59:25.882397760 +0300
+@@ -90,21 +90,7 @@
+         }
+ 
+         function clearNotifications() {
+-            if (!remorse) {
+-                remorse = remorseComponent.createObject(page)
+-            }
+-
+-            //% "Clearing notifications"
+-            remorse.execute(qsTrId("lipstick-jolla-home-no-clearing-notifications"))
+-        }
+-
+-        Component {
+-            id: remorseComponent
+-
+-            RemorsePopup {
+-                z: 100
+-                onTriggered: verticalNotificationListModel.clearRequested()
+-            }
++            verticalNotificationListModel.clearRequested()
+         }
+ 
+         SilicaListView {
+
