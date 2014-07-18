@@ -1,0 +1,12 @@
+diff -Naurw original/usr/lib/qt5/qml/Sailfish/Silica/private/MenuIndicator.qml patched/usr/lib/qt5/qml/Sailfish/Silica/private/MenuIndicator.qml
+--- original/usr/lib/qt5/qml/Sailfish/Silica/private/MenuIndicator.qml	2014-07-18 12:19:12.000000000 +0200
++++ patched/usr/lib/qt5/qml/Sailfish/Silica/private/MenuIndicator.qml	2014-07-18 12:12:52.000000000 +0200
+@@ -38,7 +38,7 @@
+ GlassItem {
+     id: indicator
+     property bool busy
+-    height: 2*Theme.paddingLarge
++    height: 1*Theme.paddingLarge
+     width: parent.width
+     radius: 0.7
+     anchors.horizontalCenter: parent.horizontalCenter
