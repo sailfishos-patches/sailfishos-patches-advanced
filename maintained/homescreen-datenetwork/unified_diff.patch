@@ -1,12 +1,18 @@
---- /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-16 01:57:46.242647008 +0400
-+++ /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-16 02:08:42.693373405 +0400
-@@ -126,7 +126,8 @@
+--- /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-18 01:14:25.682334258 +0400
++++ /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-18 01:16:55.609656142 +0400
+@@ -121,12 +121,13 @@
+             topMargin: Theme.paddingLarge
+         }
+         width: parent.width
+-        height: Math.max(cellularNetworkNameStatusIndicator.height, dateLabel.height)
++        height: cellularNetworkNameStatusIndicator.height + dateLabel.height
+ 
          CellularNetworkNameStatusIndicator {
              id: cellularNetworkNameStatusIndicator
              anchors.horizontalCenter: parent.horizontalCenter
 -            opacity: 1 - dateLabel.opacity
-+            anchors.top: dateLabel.bottom
-+	    opacity: dateLabel.opacity
++	    anchors.top: dateLabel.bottom 
++            opacity: dateLabel.opacity
          }
  
          Label {
@@ -15,21 +21,27 @@
                  updateFrequency: WallClock.Day
              }
 -            Behavior on opacity {
++            opacity: 1
 +            /*Behavior on opacity {
                  id: dateOpacityBehavior
                  FadeAnimation { }
 -            }
 +            }*/
-+	    opacity: 1
          }
      }
  
-@@ -313,7 +315,7 @@
-             name: "showCellularNetworkName"
-             PropertyChanges {
-                 target: dateLabel
--                opacity: 0
-+                opacity: 1
+@@ -270,12 +272,12 @@
+     Timer {
+         id: hideDateTimer
+         interval: 3000
+-        onTriggered: {
++        /*onTriggered: {
+             var indicator = cellularNetworkNameStatusIndicator
+             if (!LipstickSettings.lowPowerMode && (indicator.homeNetwork || indicator.visitorNetwork)) {
+                 lockScreen.state = "showCellularNetworkName"
              }
-         }
-     ]
+-        }
++        }*/
+     }
+ 
+     states: [
