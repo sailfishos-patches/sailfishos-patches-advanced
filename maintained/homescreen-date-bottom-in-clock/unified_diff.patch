@@ -1,0 +1,105 @@
+diff -Naurw original/usr/share/lipstick-jolla-home-qt5/qml/Clock.qml patched/usr/share/lipstick-jolla-home-qt5/qml/Clock.qml
+--- original/usr/share/lipstick-jolla-home-qt5/qml/Clock.qml	2014-07-02 13:05:01.000000000 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/Clock.qml	2014-07-14 23:41:07.000000000 +0200
+@@ -2,6 +2,7 @@
+ **
+ ** Copyright (C) 2013 Jolla Ltd.
+ ** Contact: Petri M. Gerdt <petri.gerdt@jollamobile.com>
++** Modified with Date by Kaacz <kaa@iol.cz>
+ **
+ ****************************************************************************/
+ 
+@@ -12,7 +13,19 @@
+ import org.nemomobile.configuration 1.0
+ import org.nemomobile.lipstick 0.1
+ 
++Column {
++
++    id: clock
++    height: 125/480*screen.width
++
++    property alias time: wallClock.time
++
+ Row {
++      
++	id: timeRow
++	height: timeText.font.pixelSize + 5
++	anchors { horizontalCenter: parent.horizontalCenter 	}
++
+     // Note: needs to be in synch with jolla-clock implementation
+ 
+     //: "translate as non-empty if am/pm indicator starts the 12h time pattern"
+@@ -27,7 +40,7 @@
+         id: timeText
+ 
+         color: lockScreen.textColor
+-        font { pixelSize: 124/480*screen.width; family: Theme.fontFamilyHeading }
++	    font { pixelSize: clock.height*0.60; family: Theme.fontFamilyHeading }
+         text: {
+             if (timeFormatConfig.value === "24") {
+                 return Format.formatDate(time, Format.TimeValueTwentyFourHours)
+@@ -81,6 +94,28 @@
+               : qsTrId("lipstick-jolla-home-la-pm_indicator")
+     }
+ 
++    }
++    
++    Row {
++	id: dateRow
++	height: dateTextMy.font.pixelSize
++	anchors { horizontalCenter: parent.horizontalCenter }
++	
++	Text {
++	  
++	    id: dateTextMy
++	    height: dateTextMy.font.pixelSize
++	    
++	    color: lockScreen.textColor
++	    font { pixelSize: clock.height*0.23; family: Theme.fontFamilyHeading }
++	    
++	    text: {
++		var dateString = Format.formatDate(wallClock.time, Format.DateFull)
++		return dateString.charAt(0).toUpperCase() + dateString.substr(1)
++	    }
++	}
++    }
++    
+     ConfigurationValue {
+         id: timeFormatConfig
+         key: "/sailfish/i18n/lc_timeformat24h"
+diff -Naurw original/usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml patched/usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml
+--- original/usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-02 13:05:01.000000000 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-14 23:57:00.000000000 +0200
+@@ -41,7 +41,7 @@
+                 recentlyOnDisplay = onDisplay
+             }
+ 
+-            lockScreen.state = "showDateImmediatelyWithoutTimer"
++	    lockScreen.state = "showCellularNetworkName"
+         }
+     }
+ 
+@@ -258,12 +258,12 @@
+             }
+         }
+ 
+-        onDisplayAboutToBeOn: lockScreen.state = "showDateImmediately"
++	 onDisplayAboutToBeOn: lockScreen.state = "showCellularNetworkName"
+     }
+ 
+     onFullyOnDisplayChanged: {
+         if (fullyOnDisplay && !hideDateTimer.running) {
+-            lockScreen.state = "showDate"
++	    lockScreen.state = "showCellularNetworkName"
+         }
+     }
+ 
+@@ -272,7 +272,7 @@
+         interval: 3000
+         onTriggered: {
+             var indicator = cellularNetworkNameStatusIndicator
+-            if (!LipstickSettings.lowPowerMode && (indicator.homeNetwork || indicator.visitorNetwork)) {
++            if (indicator.homeNetwork || indicator.visitorNetwork) {
+                 lockScreen.state = "showCellularNetworkName"
+             }
+         }
