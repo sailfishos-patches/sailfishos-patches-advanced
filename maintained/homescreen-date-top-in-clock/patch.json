@@ -1,0 +1,8 @@
+{
+    "name": "Date top in Clock region",
+    "description": "Full Date top in Clock region on LockScreen",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "Kaacz"
+    }
+}
