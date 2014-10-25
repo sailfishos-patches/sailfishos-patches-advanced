@@ -1,5 +1,5 @@
---- /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-18 01:14:25.682334258 +0400
-+++ /usr/share/lipstick-jolla-home-qt5/qml/Lockscreen.qml	2014-07-18 01:16:55.609656142 +0400
+--- /usr/share/lipstick-jolla-home-qt5/lockscreen/Lockscreen.qml	2014-07-18 01:14:25.682334258 +0400
++++ /usr/share/lipstick-jolla-home-qt5/lockscreen/Lockscreen.qml	2014-07-18 01:16:55.609656142 +0400
 @@ -121,12 +121,13 @@
              topMargin: Theme.paddingLarge
          }
