@@ -1,5 +1,5 @@
---- original/opt/lipstick-pandora/qml/Launcher.qml	2014-04-02 13:14:43.671356007 +0200
-+++ patched/opt/lipstick-pandora/qml/Launcher.qml	2014-04-04 14:43:25.786030732 +0200
+--- original/opt/lipstick-pandora/launcher/Launcher.qml	2014-04-02 13:14:43.671356007 +0200
++++ patched/opt/lipstick-pandora/launcher/Launcher.qml	2014-04-04 14:43:25.786030732 +0200
 @@ -17,7 +17,8 @@
      property Item reorderItem
      property int columns: 4

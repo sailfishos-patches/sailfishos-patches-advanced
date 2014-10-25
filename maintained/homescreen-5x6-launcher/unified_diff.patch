@@ -1,5 +1,5 @@
---- original/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-08 21:55:01.847978384 +0200
-+++ patched/usr/share/lipstick-jolla-home-qt5/qml/launcher/LauncherGrid.qml	2014-06-08 22:14:11.587192377 +0200
+--- original/usr/share/lipstick-jolla-home-qt5/launcher/LauncherGrid.qml	2014-06-08 21:55:01.847978384 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/launcher/LauncherGrid.qml	2014-06-08 22:14:11.587192377 +0200
 @@ -17,7 +17,7 @@
  
      property Item reorderItem
