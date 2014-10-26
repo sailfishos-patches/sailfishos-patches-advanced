@@ -1,6 +1,6 @@
 --- /usr/share/lipstick-jolla-home-qt5/lockscreen/Lockscreen.qml	2014-07-18 01:14:25.682334258 +0400
 +++ /usr/share/lipstick-jolla-home-qt5/lockscreen/Lockscreen.qml	2014-07-18 01:16:55.609656142 +0400
-@@ -121,12 +121,13 @@
+@@ -122,12 +122,13 @@
              topMargin: Theme.paddingLarge
          }
          width: parent.width
@@ -16,7 +16,7 @@
          }
  
          Label {
-@@ -146,10 +147,11 @@
+@@ -147,10 +148,11 @@
                  enabled: lockScreen.onDisplay
                  updateFrequency: WallClock.Day
              }
@@ -30,14 +30,14 @@
          }
      }
  
-@@ -270,12 +272,12 @@
+@@ -283,12 +285,12 @@
      Timer {
          id: hideDateTimer
          interval: 3000
 -        onTriggered: {
 +        /*onTriggered: {
              var indicator = cellularNetworkNameStatusIndicator
-             if (!LipstickSettings.lowPowerMode && (indicator.homeNetwork || indicator.visitorNetwork)) {
+             if (!lipstickSettings.lowPowerMode && (indicator.homeNetwork || indicator.visitorNetwork)) {
                  lockScreen.state = "showCellularNetworkName"
              }
 -        }

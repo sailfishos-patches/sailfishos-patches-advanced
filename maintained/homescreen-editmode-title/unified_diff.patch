@@ -1,14 +1,14 @@
 --- original/usr/share/lipstick-jolla-home-qt5/launcher/LauncherGrid.qml	2014-06-08 21:55:01.847978384 +0200
 +++ patched/usr/share/lipstick-jolla-home-qt5/launcher/LauncherGrid.qml	2014-06-15 12:28:18.029087835 +0200
-@@ -400,7 +400,6 @@
+@@ -479,7 +479,6 @@
                  color: down ? Theme.highlightColor : Theme.primaryColor
                  font.pixelSize: Theme.fontSizeTiny
                  text: object.title
--                visible: !removeApplicationEnabled
+-                visible: !launcherEditMode || itemType === LauncherModel.Folder
              }
- 
+
              Component {
-@@ -422,8 +421,8 @@
+@@ -501,8 +500,8 @@
              Component {
                  id: uninstallButtonComponent
                  UninstallButton {
@@ -16,6 +16,6 @@
 -                    anchors.horizontalCenter: parent.horizontalCenter
 +                    anchors.verticalCenter: launcherIcon.top
 +                    anchors.right: parent.right
-                     enabled: removeApplicationEnabled
+                     enabled: launcherEditMode
                      opacity: enabled ? 1.0 : 0.0
-                     visible: removeApplicationEnabled && itemType == LauncherModel.Application && appControl.isUninstallable(object.filePath) && !object.isUpdating
+                     visible: launcherEditMode && itemType == LauncherModel.ApCplication && appControl.isUninstallable(object.filePath) && !object.isUpdating
