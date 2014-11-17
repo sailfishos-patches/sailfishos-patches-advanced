@@ -4,6 +4,13 @@ This repository contains advanced patches to deeply customize your SailfishOS ex
 The patches in this packages might break your device, since they affect critical components.
 Please know how to recover from failure if you want to apply those patches.
 
+## Repo updated for Sailfish OS 1.1.0.x, the following patches not yet working:
+
+* Ambience Control Center
+* EventView No Clear Remorse (seems this remorse has been removed in 1.1.0.x)
+* Swipe Feedback
+* Unlimited multitask (patch applies and breaks the app list :)
+
 ## List of patches
 
 TODO

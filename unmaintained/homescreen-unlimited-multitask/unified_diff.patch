@@ -1,46 +1,33 @@
---- original/opt/lipstick-pandora/qml/Launcher.qml	2014-04-02 13:14:43.671356007 +0200
-+++ patched/opt/lipstick-pandora/qml/Launcher.qml	2014-04-04 14:43:25.786030732 +0200
-@@ -17,7 +17,8 @@
-     property Item reorderItem
-     property int columns: 4
+--- original/usr/share/lipstick-jolla-home-qt5/launcher/LauncherGrid.qml	2014-04-02 13:14:43.671356007 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/launcher/LauncherGrid.qml	2014-04-04 14:43:25.786030732 +0200
+@@ -21,5 +21,5 @@
      property int initialCellWidth: (desktop.width - Theme.paddingLarge * 2) / columns
 -    property real firstRowOpacity: Math.min(Math.max((dashboard.contentY - dashboard.lockscreenAndStatusAreaHeight)/cellHeight, 0.0), 1.0)
 +    property real firstRowOpacity: Math.min(Math.max((dashboard.contentY - dashboard.lockscreenAndStatusAreaHeight - switcher.singlePageHeight * (switcher.pageCount - 1))/cellHeight, 0.0), 1.0)
-+    
-     property bool removeApplicationMode
-     property Item remorse
-     property var launchingItems: []
---- original/opt/lipstick-pandora/qml/main.qml	2014-04-02 13:14:43.684356100 +0200
-+++ patched/opt/lipstick-pandora/qml/main.qml	2014-04-04 14:57:44.855545883 +0200
-@@ -38,7 +38,7 @@
+     property bool launcherEditMode: desktop.removeApplicationEnabled
+     property var launcherModel: model
+     property bool rootFolder
+--- original/usr/share/lipstick-jolla-home-qt5/main.qml	2014-04-02 13:14:43.684356100 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/main.qml	2014-04-04 14:57:44.855545883 +0200
+@@ -59,7 +59,7 @@
          property bool peeking: !Lipstick.compositor.homeActive &&
-                                !LipstickSettings.lockscreenVisible
+                                !lipstickSettings.lockscreenVisible
          property bool isInPeekingPosition: dashboard.contentY == dashboard.peekingPosition && !yBehavior.running
 -        property bool isInSwitcherPosition: dashboard.contentY == dashboard.lockscreenAndStatusAreaHeight
 +        property bool isInSwitcherPosition: dashboard.contentY >= dashboard.lockscreenAndStatusAreaHeight && dashboard.contentY <= dashboard.lockscreenAndStatusAreaHeight + (switcher.pageCount - 1) * switcher.singlePageHeight
          property bool inLauncher: dashboard.currentIndex > 1
-         property bool screenIsLocked: LipstickSettings.lockscreenVisible
+         property bool screenIsLocked: lipstickSettings.lockscreenVisible
          property bool deviceIsLocked: deviceLock.state == 1
-@@ -540,15 +540,15 @@
+@@ -518,7 +518,7 @@
              id: switcherAnchor
              width: dashboard.width
              height: dashboard.height
--            visible: dashboard.contentY > 0 && dashboard.contentY < lockAndStatusDelegate.height + switcherAnchor.height
--
-+            // visible: dashboard.contentY > 0 && dashboard.contentY < lockAndStatusDelegate.height + switcherAnchor.height
-+            
+-            opacity: dashboard.contentY > 0 && dashboard.contentY < lockAndStatusDelegate.height + switcherAnchor.height ? 1.0 : 0.0
++            // opacity: dashboard.contentY > 0 && dashboard.contentY < lockAndStatusDelegate.height + switcherAnchor.height ? 1.0 : 0.0
+ 
              DeviceLock {
                  id: deviceLockUI
-                 width: dashboard.width
-                 height: dashboard.height
-                 opacity: deviceLock.state == 1 ? 1 : 0
-                 enabled: deviceLock.state == 1
--
-+                        
-                 Behavior on opacity { FadeAnimation {} }
- 
-                 Binding {
-@@ -560,11 +560,36 @@
+@@ -538,11 +538,36 @@
  
              Switcher {
                  id: switcher
@@ -48,13 +35,12 @@
 +                property int _addedPages: 0
                  width: dashboard.width
                  opacity: deviceLock.state == 1 ? 0 : 1
-                 enabled: deviceLock.state != 1
--
-+                
+                 enabled: deviceLock.state != 1 && !desktop.animating
+ 
                  Behavior on opacity { FadeAnimation {} }
-+                
++
 +                onHeightChanged: manageSwitcherPages()
-+                
++
 +                function manageSwitcherPages() {
 +                    if (dashboard.height > 0) {
 +                        // Create dummy pages to allow paging
@@ -68,7 +54,7 @@
 +                            dashboard.model.remove(2)
 +                            switcher._addedPages --
 +                        }
-+                        
++
 +                        for (var i = 1; i < 1 + switcher._addedPages; i++) {
 +                            dashboard.model.get(i).comp.height = switcher.singlePageHeight
 +                        }
@@ -78,7 +64,7 @@
              }
          }
  
-@@ -587,7 +612,7 @@
+@@ -566,7 +691,7 @@
  
              MouseArea {
                  width: parent.width
@@ -87,14 +73,15 @@
  
                  Launcher {
                      id: launcher
-@@ -595,14 +620,14 @@
+@@ -575,15 +600,15 @@
                      onHeightChanged: manageDummyPages()
  
                      function manageDummyPages() {
--                        if (dashboard.model.count > 2 && dashboard.height > 0 && height > cellHeight) {
+-                        if (dashboard.model.count >= 2 && dashboard.height > 0) {
 +                        if (dashboard.model.count > 1 + switcher.pageCount && dashboard.height > 0 && height > cellHeight) {
                              // Create dummy pages to allow paging
-                             var pageCount = Math.ceil((height - cellHeight)/dashboard.height)
+                             var pageCount = Math.max(desktop.removeApplicationEnabled ? 1 : 0,
+                                                      Math.ceil((height - cellHeight)/dashboard.height))
 -                            while (dashboard.model.count-2 < pageCount) {
 +                            while (dashboard.model.count - 1 - switcher.pageCount < pageCount) {
                                  var dummy = dummyDelegate.createObject(dashboard.contentItem)
@@ -105,29 +92,29 @@
                                  var obj = dashboard.model.get(dashboard.model.count-1)
                                  dashboard.model.remove(dashboard.model.count-1)
                              }
---- original/opt/lipstick-pandora/qml/Switcher.qml	2014-04-02 13:14:43.718356343 +0200
-+++ patched/opt/lipstick-pandora/qml/Switcher.qml	2014-04-04 14:43:25.788030744 +0200
-@@ -19,8 +19,9 @@
-     property int showingPid
+--- original/usr/share/lipstick-jolla-home-qt5/switcher/Switcher.qml	2014-04-02 13:14:43.718356343 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/switcher/Switcher.qml	2014-04-04 14:43:25.788030744 +0200
+@@ -21,8 +21,9 @@
+     property variant showingWin: null
      property bool skipOnReleased: false
-     property bool appShowInProgress: showingPid > 0 || appShowTimer.running || pendingWindows.count > 0
+     property bool appShowInProgress: showingWid > 0 || appShowTimer.running || pendingWindows.count > 0
 +    property int singlePageHeight: switcherRoot.columns * (Theme.paddingLarge + switcherRoot.windowHeight)
  
--    height: desktop.closeApplicationEnabled ? Math.max(housekeeping.height, switcherRoot.height + 2 * Theme.paddingLarge) : desktop.height
-+    height: desktop.closeApplicationEnabled ? Math.max(housekeeping.height, switcherRoot.height + 2 * Theme.paddingLarge) : desktop.height * Math.max(Math.ceil(mruSwitcherModel.count / 9), 1)
+-    height: desktop.closeApplicationEnabled ? Math.max(housekeeping.height, switcherRoot.childrenRect.height + 2 * Theme.paddingLarge) : (desktop.height - launcher.cellHeight)
++    height: desktop.closeApplicationEnabled ? Math.max(housekeeping.height, switcherRoot.childrenRect.height + 2 * Theme.paddingLarge) : (desktop.height - launcher.cellHeight) * Math.max(Math.ceil(mruSwitcherModel.count / 9), 1)
  
      function playEffect() {
          ngfEvent.play()
-@@ -213,7 +214,7 @@
+@@ -320,7 +321,7 @@
                  id: switcherDelegate
                  width: switcherRoot.windowWidth
                  height: switcherRoot.windowHeight
 -                visible: desktop.closeApplicationEnabled || model.index < 9
-+                // visible: desktop.closeApplicationEnabled
-                 onWindowMapPendingChanged: {
-                     if (windowMapPending) mruSwitcherModel.touch(index)
-                 }
-@@ -241,7 +242,7 @@
++                // visible: desktop.closeApplicationEnabled || model.index < 9
+ 
+                 windowId: model.window
+                 coverId: coverWindowId.value
+@@ -345,7 +346,7 @@
              onCloseApplicationEnabledChanged: switcherRoot.updateColumns()
          }
      }

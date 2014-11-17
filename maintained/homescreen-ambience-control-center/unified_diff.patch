@@ -1,5 +1,5 @@
---- original/usr/share/lipstick-jolla-home-qt5/qml/AmbiencePage.qml	2014-06-08 21:55:01.862978516 +0200
-+++ patched/usr/share/lipstick-jolla-home-qt5/qml/AmbiencePage.qml	2014-06-08 22:45:58.007084002 +0200
+--- original/usr/share/lipstick-jolla-home-qt5/ambiencepicker/AmbiencePage.qml	2014-06-08 21:55:01.862978516 +0200
++++ patched/usr/share/lipstick-jolla-home-qt5/ambiencepicker/AmbiencePage.qml	2014-06-08 22:45:58.007084002 +0200
 @@ -9,6 +9,8 @@
  import Sailfish.Silica 1.0
  import Sailfish.Ambience 1.0
