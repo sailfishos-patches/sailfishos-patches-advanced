@@ -1,164 +1,209 @@
 diff -ur original/usr/share/lipstick-jolla-home-qt5/compositor.qml patched/usr/share/lipstick-jolla-home-qt5/compositor.qml
 --- original/usr/share/lipstick-jolla-home-qt5/compositor.qml	2014-11-18 21:22:01.005907235 +0100
-+++ patched/usr/share/lipstick-jolla-home-qt5/compositor.qml	2014-11-21 20:42:35.473133859 +0100
-@@ -215,6 +215,14 @@
++++ patched/usr/share/lipstick-jolla-home-qt5/compositor.qml	2014-11-22 19:54:15.840910231 +0100
+@@ -204,6 +204,9 @@
+             setCurrentWindow(root.homeWindow)
+         }
+         partnerAppearGesture = false
++        if (additionalAppLayer.state != "default") {
++            additionalAppLayer.state = "temporarilyHide"
++        }
+     }
+ 
+     PeekFilter.onGestureCanceled: {
+@@ -215,6 +218,14 @@
              startHideApplicationWindow(partnerAppearAnimation.target)
          }
          partnerAppearGesture = false
 +        
-+        if (root.homePeeking) {
++        if (additionalAppLayer.state != "default") {
 +            if (PeekFilter.activeArea == PeekFilter.Left || PeekFilter.activeArea == PeekFilter.Right) {
-+                appLayer.state = "horizontalCancel"
++                additionalAppLayer.state = "horizontalCancel"
 +            } else if (PeekFilter.activeArea == PeekFilter.Top || PeekFilter.activeArea == PeekFilter.Bottom) {
-+                appLayer.state = "verticalCancel"
++                additionalAppLayer.state = "verticalCancel"
 +            }
 +        }
      }
  
      PeekFilter.onGestureStarted: {
-@@ -240,6 +248,14 @@
+@@ -240,6 +251,14 @@
              partnerAppearAnimation.target = targetWindow
              partnerAppearGesture = true
          }
 +        
 +        if (root.homePeeking && !root.eventsPeeking) {
 +            if (PeekFilter.activeArea == PeekFilter.Left || PeekFilter.activeArea == PeekFilter.Right) {
-+                appLayer.state = "horizontalMove"
++                additionalAppLayer.state = "horizontalMove"
 +            } else if (PeekFilter.activeArea == PeekFilter.Top || PeekFilter.activeArea == PeekFilter.Bottom) {
-+                appLayer.state = "verticalMove"
++                additionalAppLayer.state = "verticalMove"
 +            }
 +        }
      }
  
      PeekFilter.onActiveChanged: {
-@@ -516,7 +532,120 @@
-         Item {
-             id: appLayer
- 
--            anchors.fill: parent
-+            anchors.centerIn: parent
-+            anchors.horizontalCenterOffset: 0
-+            anchors.verticalCenterOffset: 0
-+            width: parent.width
-+            height: parent.height
-+            
-+            readonly property int _horizontalSwipeCoefficient: PeekFilter.activeArea == PeekFilter.Left ? 1 : (PeekFilter.activeArea == PeekFilter.Right ? -1 : 0)
-+            readonly property int _verticalSwipeCoefficient: PeekFilter.activeArea == PeekFilter.Top ? 1 : (PeekFilter.activeArea == PeekFilter.Bottom ? -1 : 0)
-+            readonly property real _progressDistance: PeekFilter.progress * PeekFilter.threshold
-+            
-+            Binding {
-+                id: horizontalSwipeBinding
-+                target: appLayer
-+                property: "anchors.horizontalCenterOffset"
-+                value: appLayer._horizontalSwipeCoefficient * appLayer._progressDistance
-+                when: false
-+            }
-+
-+            Binding {
-+                id: verticalSwipeBinding
-+                target: appLayer
-+                property: "anchors.verticalCenterOffset"
-+                value: appLayer._verticalSwipeCoefficient * appLayer._progressDistance
-+                when: false
-+            }
-+            
-+            states: [
-+                State {
-+                    name: "default"
-+                    PropertyChanges {
-+                        target: appLayer
-+                        anchors.horizontalCenterOffset: 0
-+                        anchors.verticalCenterOffset: 0
-+                    }
-+                },
-+                State {
-+                    name: "horizontalMove"
-+                    PropertyChanges {
-+                        target: horizontalSwipeBinding
-+                        when: true
-+                    }
-+                    PropertyChanges {
-+                        target: appLayer
-+                        anchors.verticalCenterOffset: 0
-+                    }
-+                }, State {
-+                    name: "horizontalCancel"
-+                    PropertyChanges {
-+                        target: horizontalSwipeBinding
-+                        when: false
-+                    }
-+                    PropertyChanges {
-+                        target: appLayer
-+                        anchors.horizontalCenterOffset: 0
-+                        anchors.verticalCenterOffset: 0
-+                    }
-+                }, State {
-+                    name: "verticalMove"
-+                    PropertyChanges {
-+                        target: verticalSwipeBinding
-+                        when: true
-+                    }
-+                    PropertyChanges {
-+                        target: appLayer
-+                        anchors.horizontalCenterOffset: 0
-+                    }
-+                }, State {
-+                    name: "verticalCancel"
-+                    PropertyChanges {
-+                        target: verticalSwipeBinding
-+                        when: false
-+                    }
-+                    PropertyChanges {
-+                        target: appLayer
-+                        anchors.horizontalCenterOffset: 0
-+                        anchors.verticalCenterOffset: 0
-+                    }
-+                }
-+            ]
-+
-+            transitions: [
-+                Transition {
-+                    to: "horizontalCancel"
-+                    SequentialAnimation {
-+                        PropertyAnimation {
-+                            target: appLayer
-+                            property: "anchors.horizontalCenterOffset"
-+                            duration: 200
-+                            easing.type: Easing.OutBack
-+                        }
-+                        PropertyAction {
-+                            target: appLayer
-+                            property: "state"
-+                            value: "default"
-+                        }
-+                    }
-+                },
-+                Transition {
-+                    to: "verticalCancel"
-+                    SequentialAnimation {
-+                        PropertyAnimation {
-+                            target: appLayer
-+                            property: "anchors.verticalCenterOffset"
-+                            duration: 200
-+                            easing.type: Easing.OutBack
-+                        }
-+                        PropertyAction {
-+                            target: appLayer
-+                            property: "state"
-+                            value: "default"
-+                        }
-+                    }
-+                }
-+            ]
- 
-             z: 2
- 
-@@ -524,7 +653,7 @@
+@@ -524,7 +543,7 @@
  
              property bool keepAppLayerOpaque: !homePeek && (root.eventsActive || eventPeek || root.alarmActive || partnerAppearAnimation.running || partnerAppearGesture)
  
 -            property real targetOpacity: root.topmostApplicationWindow != null ? (keepAppLayerOpaque ? 1 : (root.appActive ? (1 - Math.min(1, PeekFilter.progress)) : 0)) : ((root.partnerAppearGesture || partnerAppearAnimation.running) ? 1 : 0)
-+            property real targetOpacity: root.topmostApplicationWindow != null ? (!homePeek && (root.eventsActive || eventPeek || root.alarmActive) ? 1 : (root.appActive ? (1 - 0.8 * Math.min(1, PeekFilter.progress)) : (appPeek ? Math.min(1, PeekFilter.progress) : 0))) : 0
++            property real targetOpacity: root.topmostApplicationWindow != null ? (keepAppLayerOpaque ? 1 : (root.appActive ? (1 - 0.8 * Math.min(1, PeekFilter.progress)) : 0)) : ((root.partnerAppearGesture || partnerAppearAnimation.running) ? 1 : 0)
              visible: opacity > 0 // TODO: scenegraph should cull, but doesn't seem to do so. investigate.
              enabled: root.appActive
              opacity: 0
+@@ -593,6 +612,144 @@
+                     fromWindow = toWindow = null
+                 }
+             }
++            
++            // This additional layer is animated so that we get swipe feedback
++            Item {
++                id: additionalAppLayer
++                anchors.centerIn: parent
++                width: parent.width
++                height: parent.height
++                
++                readonly property int _horizontalSwipeCoefficient: PeekFilter.activeArea == PeekFilter.Left ? 1 : (PeekFilter.activeArea == PeekFilter.Right ? -1 : 0)
++                readonly property int _verticalSwipeCoefficient: PeekFilter.activeArea == PeekFilter.Top ? 1 : (PeekFilter.activeArea == PeekFilter.Bottom ? -1 : 0)
++                readonly property real _progressDistance: PeekFilter.progress * PeekFilter.threshold
++                
++                Binding {
++                    id: horizontalSwipeBinding
++                    target: additionalAppLayer
++                    property: "anchors.horizontalCenterOffset"
++                    value: additionalAppLayer._horizontalSwipeCoefficient * additionalAppLayer._progressDistance
++                    when: false
++                }
++
++                Binding {
++                    id: verticalSwipeBinding
++                    target: additionalAppLayer
++                    property: "anchors.verticalCenterOffset"
++                    value: additionalAppLayer._verticalSwipeCoefficient * additionalAppLayer._progressDistance
++                    when: false
++                }
++               
++                states: [
++                    State {
++                        name: "default"
++                        PropertyChanges {
++                            target: additionalAppLayer
++                            anchors.horizontalCenterOffset: 0
++                            anchors.verticalCenterOffset: 0
++                        }
++                    },
++                    State {
++                        name: "horizontalMove"
++                        PropertyChanges {
++                            target: horizontalSwipeBinding
++                            when: true
++                        }
++                        PropertyChanges {
++                            target: additionalAppLayer
++                            anchors.verticalCenterOffset: 0
++                        }
++                    }, State {
++                        name: "horizontalCancel"
++                        PropertyChanges {
++                            target: horizontalSwipeBinding
++                            when: false
++                        }
++                        PropertyChanges {
++                            target: additionalAppLayer
++                            anchors.horizontalCenterOffset: 0
++                            anchors.verticalCenterOffset: 0
++                        }
++                    }, State {
++                        name: "verticalMove"
++                        PropertyChanges {
++                            target: verticalSwipeBinding
++                            when: true
++                        }
++                        PropertyChanges {
++                            target: additionalAppLayer
++                            anchors.horizontalCenterOffset: 0
++                        }
++                    }, State {
++                        name: "verticalCancel"
++                        PropertyChanges {
++                            target: verticalSwipeBinding
++                            when: false
++                        }
++                        PropertyChanges {
++                            target: additionalAppLayer
++                            anchors.horizontalCenterOffset: 0
++                            anchors.verticalCenterOffset: 0
++                        }
++                    }, State {
++                        name: "temporarilyHide"
++                        PropertyChanges {
++                            target: additionalAppLayer
++                            visible: false
++                            anchors.horizontalCenterOffset: 0
++                            anchors.verticalCenterOffset: 0
++                        }
++                    }
++                ]
++
++                transitions: [
++                    Transition {
++                        to: "horizontalCancel"
++                        SequentialAnimation {
++                            PropertyAnimation {
++                                target: additionalAppLayer
++                                property: "anchors.horizontalCenterOffset"
++                                duration: 200
++                                easing.type: Easing.OutBack
++                            }
++                            PropertyAction {
++                                target: additionalAppLayer
++                                property: "state"
++                                value: "default"
++                            }
++                        }
++                    },
++                    Transition {
++                        to: "verticalCancel"
++                        SequentialAnimation {
++                            PropertyAnimation {
++                                target: additionalAppLayer
++                                property: "anchors.verticalCenterOffset"
++                                duration: 200
++                                easing.type: Easing.OutBack
++                            }
++                            PropertyAction {
++                                target: additionalAppLayer
++                                property: "state"
++                                value: "default"
++                            }
++                        }
++                    }, 
++                    Transition {
++                        to: "temporarilyHide"
++                        SequentialAnimation {
++                            PauseAnimation {
++                                duration: 200
++                            }
++                            PropertyAction {
++                                target: additionalAppLayer
++                                property: "state"
++                                value: "default"
++                            }
++                        }
++                    }
++                ]
++            }
+         }
+ 
+         Item {
+@@ -913,8 +1070,10 @@
+             parent = overlayLayer
+         } else if (isAlarmWindow) {
+             parent = alarmsLayer
+-        } else {
++        } else if (isPartnerWindow || isAmbienceWindow) {
+             parent = appLayer
++        } else {
++            parent = additionalAppLayer
+         }
+ 
+         var w = component.createObject(parent, {window: window})
