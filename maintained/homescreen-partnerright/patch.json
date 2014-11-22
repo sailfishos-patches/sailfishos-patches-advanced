@@ -1,0 +1,8 @@
+{
+    "name": "Partner space at the right",
+    "description": "A homescreen patch put the partner space at right.",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "Lucien Xu"
+    }
+}

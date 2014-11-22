@@ -1,0 +1,12 @@
+diff -ur original/usr/share/lipstick-jolla-home-qt5/compositor.qml patched/usr/share/lipstick-jolla-home-qt5/compositor.qml
+--- original/usr/share/lipstick-jolla-home-qt5/compositor.qml	2014-11-18 21:22:01.005907235 +0100
++++ patched/usr/share/lipstick-jolla-home-qt5/compositor.qml	2014-11-22 21:39:44.676919011 +0100
+@@ -230,7 +230,7 @@
+                    && (PeekFilter.activeArea === PeekFilter.Left || PeekFilter.activeArea === PeekFilter.Right)
+                    && (ambienceWindow || partnerWindow)) {
+ 
+-            var targetWindow = PeekFilter.activeArea === PeekFilter.Left ?
++            var targetWindow = PeekFilter.activeArea === PeekFilter.Right ?
+                         (partnerWindow || ambienceWindow)
+                       : (ambienceWindow || partnerWindow)
+ 
