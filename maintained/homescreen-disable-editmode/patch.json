@@ -1,0 +1,8 @@
+{
+    "name": "Disable Edit Mode",
+    "description": "Disables edit mode in the menu. You must remove this patch to re-enable. Inspired by similar adjustment for Nokia N900.",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "Jakub Kožíšek"
+    }
+}
