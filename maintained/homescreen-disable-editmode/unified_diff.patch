@@ -1,0 +1,11 @@
+--- original/usr/share/lipstick-jolla-home-qt5/launcher/LauncherGrid.qml	2015-01-03 23:21:45.000000000 +0100
++++ patched/usr/share/lipstick-jolla-home-qt5/launcher/LauncherGrid.qml	2015-01-03 23:24:19.288757793 +0100
+@@ -287,7 +287,7 @@
+                 }
+             }
+ 
+-            onPressAndHold: setEditMode(true)
++//             onPressAndHold: setEditMode(true)
+ 
+             onPressed: {
+                 // The currentIndex will not be destroyed when we scroll out of view
