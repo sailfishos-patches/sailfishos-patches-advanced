@@ -1,0 +1,8 @@
+{
+    "name": "Zoom gallery-images beyond display resolution",
+    "description": "Allow zooming of images in gallery beyond display resolution - especially usefull for zooming small images like boarding-pass-QR-codes.",
+    "category": "gallery",
+    "infos": {
+        "maintainer": "darvari"
+    }
+}

@@ -1,0 +1,13 @@
+--- original/usr/share/jolla-gallery/pages/FlickableImageView.qml	2014-09-30 11:22:03.000000000 +0200
++++ patched/usr/share/jolla-gallery/pages/FlickableImageView.qml	2014-09-30 11:14:51.000000000 +0200
+@@ -147,8 +147,8 @@
+                 enableZoom: !view.moving
+ 
+                 active: mediaItem.active
+-                maximumWidth: model.width
+-                maximumHeight: model.height
++                maximumWidth: model.width * 10
++                maximumHeight: model.height * 10
+ 
+                 onClicked: view.clicked()
+             }
